@@ -241,14 +241,3 @@ func convertToBool(s string, defaultValue bool) bool {
 	}
 	return v
 }
-
-func parseOptionInt(s string, defaultValue int) int {
-	if s == "" {
-		return defaultValue
-	}
-	v, err := strconv.Atoi(s)
-	if err != nil {
-		return defaultValue
-	}
-	return v
-}

@@ -81,7 +81,7 @@ param1, param2... are
 | --- | --- | --- | --- |
 | auth_plugin_name | Authentication plugin name. | Srp256 | Srp256/Srp/Legacy_Auth are available. |
 | column_name_to_lower | Force column name to lower | false | For "github.com/jmoiron/sqlx" |
-| page_size | Page size in bytes for a database created with the `firebirdsql_createdb` driver. Ignored when attaching. | 4096 | Firebird rounds unsupported values to a valid page size. |
+| page_size | Page size in bytes for a database created with the `firebirdsql_createdb` driver: 4096, 8192, 16384 or 32768. Any other value is rejected before dialing. Ignored when attaching. | 4096 | Firebird 2.5/3.0 accept 4096-16384, 4.0/5.0 4096-32768 and 6.0 8192-32768; the server adjusts a size outside its range (4096 becomes 8192 on 6.0). |
 | role | Role name | | |
 | timezone | Time Zone name | | For Firebird 4.0+ |
 | wire_crypt | Enable wire data encryption or not. | true | For Firebird 3.0+ |
