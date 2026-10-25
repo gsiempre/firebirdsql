@@ -25,7 +25,9 @@ package firebirdsql
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -79,6 +81,7 @@ func parseDSN(dsns string) (*firebirdDsn, error) {
 		"auth_plugin_name":     "Srp256",
 		"charset":              "UTF8",
 		"column_name_to_lower": "false",
+		"page_size":            "4096",
 		"role":                 "",
 		"timezone":             "",
 		"wire_crypt":           "true",
@@ -93,5 +96,21 @@ func parseDSN(dsns string) (*firebirdDsn, error) {
 		}
 	}
 
+	// Fail fast on an invalid page_size before dialing.
+	if _, err := parsePageSize(dsn.options["page_size"]); err != nil {
+		return nil, err
+	}
+
 	return dsn, nil
+}
+
+// parsePageSize parses the page_size option used when creating a database.
+// Firebird rounds unsupported sizes to a valid one, so only a positive
+// integer is required here.
+func parsePageSize(v string) (int32, error) {
+	n, err := strconv.ParseInt(v, 10, 32)
+	if err != nil || n <= 0 {
+		return 0, fmt.Errorf("invalid page_size %q: must be a positive integer", v)
+	}
+	return int32(n), nil
 }

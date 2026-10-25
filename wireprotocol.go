@@ -749,10 +749,8 @@ func (p *wireProtocol) opConnect(dbName string, user string, password string, op
 	return err
 }
 
-func (p *wireProtocol) opCreate(dbName string, user string, password string, role string) error {
+func (p *wireProtocol) opCreate(dbName string, user string, password string, role string, page_size int32) error {
 	p.debugPrint("opCreate")
-	var page_size int32
-	page_size = 4096
 
 	encode := bytes.NewBufferString(p.charset).Bytes()
 	userBytes := bytes.NewBufferString(strings.ToUpper(user)).Bytes()

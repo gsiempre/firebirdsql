@@ -195,7 +195,11 @@ func createFirebirdsqlConn(dsn *firebirdDsn) (fc *firebirdsqlConn, err error) {
 		return
 	}
 
-	err = wp.opCreate(dsn.dbName, dsn.user, dsn.passwd, dsn.options["role"])
+	pageSize, err := parsePageSize(dsn.options["page_size"])
+	if err != nil {
+		return
+	}
+	err = wp.opCreate(dsn.dbName, dsn.user, dsn.passwd, dsn.options["role"], pageSize)
 	if err != nil {
 		return
 	}
