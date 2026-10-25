@@ -176,6 +176,9 @@ type wireProtocol struct {
 
 	// Time Zone
 	timezone string
+
+	// Page size for op_create (DSN page_size).
+	pageSize int32
 }
 
 func newWireProtocol(addr string, timezone string, charset string) (*wireProtocol, error) {
@@ -749,7 +752,7 @@ func (p *wireProtocol) opConnect(dbName string, user string, password string, op
 	return err
 }
 
-func (p *wireProtocol) opCreate(dbName string, user string, password string, role string, page_size int32) error {
+func (p *wireProtocol) opCreate(dbName string, user string, password string, role string) error {
 	p.debugPrint("opCreate")
 
 	encode := bytes.NewBufferString(p.charset).Bytes()
@@ -766,7 +769,7 @@ func (p *wireProtocol) opCreate(dbName string, user string, password string, rol
 		[]byte{isc_dpb_sql_dialect, 4}, int32_to_bytes(3),
 		[]byte{isc_dpb_force_write, 4}, bint32_to_bytes(1),
 		[]byte{isc_dpb_overwrite, 4}, bint32_to_bytes(1),
-		[]byte{isc_dpb_page_size, 4}, int32_to_bytes(page_size),
+		[]byte{isc_dpb_page_size, 4}, int32_to_bytes(p.pageSize),
 		[]byte{isc_dpb_utf8_filename, 1, 1},
 	}, nil)
 
